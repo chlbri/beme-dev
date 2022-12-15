@@ -12,9 +12,11 @@ export type Context = {
   API_KEY?: string;
   URL?: string;
   response?: Response;
-  data?: any;
-  news?: NewsResponse;
-} & Query;
+  json?: unknown;
+  news?: NewsResponse['news'];
+  pagination?: NewsResponse['pagination'];
+  categories?: string;
+} & Omit<Query, 'categories'>;
 
 export type Events = {
   type: 'QUERY';
