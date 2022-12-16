@@ -1,5 +1,6 @@
 import { CATEGORIES } from 'lib/entities/strings';
 import { createMachine } from 'xstate';
+import fetchNews from '../fetchNews/machine';
 import { Context, Events } from './machine.types';
 
 export const machine = createMachine(
@@ -11,17 +12,18 @@ export const machine = createMachine(
     tsTypes: {} as import('./machine.typegen').Typegen0,
     predictableActionArguments: true,
     preserveActionOrder: true,
-    id: 'main',
-    initial: 'idle',
     context: { currentPage: '/', categories: CATEGORIES },
+    id: 'main',
+    initial: 'cache',
     states: {
-      idle: {
+      cache: {
         invoke: {
           src: 'fetchNews',
+          id: 'fetchNews',
           onDone: [
             {
               target: 'work',
-              actions: "'setNews'",
+              actions: 'setNews',
             },
           ],
           onError: [
@@ -29,6 +31,13 @@ export const machine = createMachine(
               target: 'work',
             },
           ],
+        },
+        after: {
+          timeToGetEnvironmentVariables: {
+            target: '#main.cache',
+            actions: ['forwardDefaultQuery'],
+            internal: true,
+          },
         },
       },
       work: {
@@ -40,20 +49,14 @@ export const machine = createMachine(
               active: {
                 initial: 'idle',
                 states: {
-                  idle: {
-                    on: {
-                      SEARCH: {
-                        target: 'loading',
-                      },
-                    },
-                  },
                   loading: {
                     invoke: {
                       src: 'fetchNews',
+                      id: 'fetchNews',
                       onDone: [
                         {
                           target: 'idle',
-                          actions: "'setNews'",
+                          actions: 'setNews',
                         },
                       ],
                       onError: [
@@ -61,6 +64,16 @@ export const machine = createMachine(
                           target: 'idle',
                         },
                       ],
+                    },
+                    on: {
+                      SEARCH: {
+                        actions: 'forwardQuery',
+                      },
+                    },
+                  },
+                  idle: {
+                    always: {
+                      target: 'loading',
                     },
                   },
                 },
@@ -85,7 +98,6 @@ export const machine = createMachine(
             },
           },
         },
-
         type: 'parallel',
       },
     },
@@ -93,15 +105,7 @@ export const machine = createMachine(
   {
     actions: {},
     services: {
-      fetchNews: async context => {
-        const API_URL = process.env.MEDIA_STACK_URL;
-        const API_KEY = process.env.MEDIA_STACK_APIKEY;
-        const KEYWORDS = context.categories.join(',');
-        const URL = `${API_URL}?access_key=${API_KEY}&keywords=${KEYWORDS}`;
-        const response = await fetch(URL);
-        const data = await response.json();
-        return data;
-      },
+      fetchNews,
     },
   },
 );

@@ -4,12 +4,12 @@ import { escalate } from 'xstate/lib/actions';
 import { NewsResponse, newsResponseSchema } from '~entities/objects';
 import { Context, Events } from './machine.types';
 
-export const machine = createMachine(
+const machine = createMachine(
   {
     id: 'fetchNews',
-    initial: 'preferences',
+    initial: 'environment',
     states: {
-      preferences: {
+      environment: {
         initial: 'API_URL',
         states: {
           API_URL: {
@@ -29,7 +29,7 @@ export const machine = createMachine(
             invoke: {
               src: 'get_API_KEY',
               onDone: {
-                target: '#query',
+                target: '#idle',
                 actions: 'assignAPI_KEY',
               },
               onError: {
@@ -40,8 +40,8 @@ export const machine = createMachine(
           },
         },
       },
-      query: {
-        id: 'query',
+      idle: {
+        id: 'idle',
         on: {
           QUERY: {
             target: 'fetch',
@@ -185,3 +185,5 @@ export const machine = createMachine(
     },
   },
 );
+
+export default machine;

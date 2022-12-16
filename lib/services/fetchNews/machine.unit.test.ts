@@ -1,6 +1,6 @@
 import testMachine, { mockMachine } from '@bemedev/x-test';
 // import { describe, test } from 'vitest';
-import { machine } from './machine';
+import machine from './machine';
 
 describe('Acceptance test', () => {
   const _machine = mockMachine(machine);
