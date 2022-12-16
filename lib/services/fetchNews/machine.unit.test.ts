@@ -416,7 +416,7 @@ describe('Acceptance test', () => {
             'escalate',
             escalate.event({ _errors: ERRORS.object }),
           );
-          console.log(dos.event(_, { type: 'SUBMIT', data: 'data' }));
+          console.log(dos.event({} as any, { type: 'SUBMIT', data: 'data' }));
         });
 
         test('It constructs the errors', () => {
