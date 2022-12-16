@@ -11,6 +11,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '^~service': ['<rootDir>/lib/services/main/index.ts'],
     '^~entities/(.*)$': ['<rootDir>/lib/entities/$1'],
+    '^~helpers/(.*)$': ['<rootDir>/lib/helpers/$1'],
   },
 };
 

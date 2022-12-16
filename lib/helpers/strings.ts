@@ -8,9 +8,7 @@ export function isDefined(value: any): value is string {
   return out;
 }
 
-export function constructArrayObject<T extends readonly string[]>(
-  ...array: T
-) {
+export function constructArrayObject<T extends string[]>(...array: T) {
   type Str = T[number];
   const object = array.reduce((acc, item: Str) => {
     acc[item] = item;
@@ -18,6 +16,6 @@ export function constructArrayObject<T extends readonly string[]>(
   }, {} as { [key in Str]: key });
   return {
     object,
-    array,
+    array: array as Str[],
   } as const;
 }

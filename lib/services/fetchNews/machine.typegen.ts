@@ -4,7 +4,8 @@
   export interface Typegen0 {
         '@@xstate/typegen': true;
         internalEvents: {
-          "done.invoke.fetch": { type: "done.invoke.fetch"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
+          "": { type: "" };
+"done.invoke.fetch": { type: "done.invoke.fetch"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.fetchNews.environment.API_KEY:invocation[0]": { type: "done.invoke.fetchNews.environment.API_KEY:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.fetchNews.environment.API_URL:invocation[0]": { type: "done.invoke.fetchNews.environment.API_URL:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "done.invoke.json": { type: "done.invoke.json"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
@@ -38,6 +39,7 @@
 "assignResponse": "done.invoke.fetch";
 "buildURL": "QUERY";
 "concatCategories": "QUERY";
+"constructErrors": "";
 "escaladeFetchError": "error.platform.fetch";
 "escaladeJsonError": "error.platform.json";
 "escaladeZodError": "error.platform.zod";
@@ -57,7 +59,7 @@
 "json": "done.invoke.fetch";
 "zod": "done.invoke.json";
         };
-        matchesStates: "environment" | "environment.API_KEY" | "environment.API_URL" | "error" | "fetch" | "idle" | "json" | "success" | "zod" | { "environment"?: "API_KEY" | "API_URL"; };
+        matchesStates: "constructErrors" | "environment" | "environment.API_KEY" | "environment.API_URL" | "error" | "fetch" | "idle" | "json" | "success" | "zod" | { "environment"?: "API_KEY" | "API_URL"; };
         tags: never;
       }
   

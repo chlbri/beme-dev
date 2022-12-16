@@ -1,4 +1,5 @@
 import testMachine, { mockMachine } from '@bemedev/x-test';
+import { ERRORS } from './constants';
 // import { describe, test } from 'vitest';
 import machine from './machine';
 
@@ -402,6 +403,33 @@ describe('Acceptance test', () => {
         'escalateNoAPI_KEY',
         'escalateNoAPI_URL',
       ].forEach(escalateTest);
+
+      describe('constructErrors', () => {
+        const { createAcceptance, createExpect } =
+          assignAction('constructErrors');
+
+        test('Acceptance', () => {
+          createAcceptance()();
+          const escalate = machine.options.actions?.escaladeFetchError;
+          const dos = machine.options.actions?.do;
+          console.log(
+            'escalate',
+            escalate.event({ _errors: ERRORS.object }),
+          );
+          console.log(dos.event(_, { type: 'SUBMIT', data: 'data' }));
+        });
+
+        test('It constructs the errors', () => {
+          const _errors = ERRORS.object;
+          const expect = createExpect({
+            expected: {
+              _errors,
+            },
+            context: {},
+          });
+          expect();
+        });
+      });
     });
   });
 });

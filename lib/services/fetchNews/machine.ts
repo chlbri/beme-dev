@@ -1,7 +1,8 @@
 import { assign } from '@xstate/immer';
 import { createMachine } from 'xstate';
-import { escalate } from 'xstate/lib/actions';
+import { escalate, forwardTo } from 'xstate/lib/actions';
 import { NewsResponse, newsResponseSchema } from '~entities/objects';
+import { ERRORS } from './constants';
 import { Context, Events } from './machine.types';
 
 const machine = createMachine(
@@ -29,7 +30,7 @@ const machine = createMachine(
             invoke: {
               src: 'get_API_KEY',
               onDone: {
-                target: '#idle',
+                target: '#constructErrors',
                 actions: 'assignAPI_KEY',
               },
               onError: {
@@ -38,6 +39,13 @@ const machine = createMachine(
               },
             },
           },
+        },
+      },
+      constructErrors: {
+        id: 'constructErrors',
+        always: {
+          target: 'idle',
+          actions: ['constructErrors'],
         },
       },
       idle: {
@@ -114,6 +122,9 @@ const machine = createMachine(
   },
   {
     actions: {
+      constructErrors: assign(context => {
+        context._errors = ERRORS.object;
+      }),
       assignAPI_URL: assign((context, { data }) => {
         context.API_URL = data;
       }),
@@ -145,11 +156,12 @@ const machine = createMachine(
       }),
 
       // #region Errors
-      escaladeFetchError: escalate('FETCH_ERROR'),
-      escaladeJsonError: escalate('JSON_ERROR'),
-      escaladeZodError: escalate('ZOD_ERROR'),
-      escalateNoAPI_KEY: escalate('API_KEY_ERROR'),
-      escalateNoAPI_URL: escalate('API_URL_ERROR'),
+      escaladeFetchError: escalate(({ _errors }) => _errors!.FETCH_ERROR),
+      escaladeJsonError: escalate(({ _errors }) => _errors!.JSON_ERROR),
+      escaladeZodError: escalate(({ _errors }) => _errors!.ZOD_ERROR),
+      escalateNoAPI_KEY: escalate(({ _errors }) => _errors!.API_KEY_ERROR),
+      escalateNoAPI_URL: escalate(({ _errors }) => _errors!.API_URL_ERROR),
+      do: forwardTo('fetchNews'),
       // #endregion
     },
     services: {
