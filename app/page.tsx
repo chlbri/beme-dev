@@ -1,9 +1,9 @@
+'use client';
+
 import { FC } from 'react';
 
-const HomePage: FC = () => (
-  <div className="" lang="en-US">
-    Homepage
-  </div>
-);
+const HomePage: FC = () => {
+  return <div className=""></div>;
+};
 
 export default HomePage;

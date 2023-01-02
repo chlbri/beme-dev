@@ -21,9 +21,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "~service": ["./lib/services/main/index.ts"],
+      "~service": ["./lib/services/main.ts"],
       "~entities/*": ["./lib/entities/*"],
-      "~helpers/*": ["./lib/helpers/*"],
+      "~helpers/*": ["./lib/helpers/*"]
     }
   },
   "include": [

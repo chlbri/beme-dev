@@ -1,7 +1,6 @@
-import { isDefined } from 'lib/helpers/strings';
 import Image from 'next/image';
 import { FC } from 'react';
-import { Article, NewsResponse } from '~entities/objects';
+import { Article, isDefined, NewsResponse } from 'services';
 
 const ArticleView: FC<Article> = ({
   image,

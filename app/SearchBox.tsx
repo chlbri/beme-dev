@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import type { FC } from 'react';
-import { search } from '~service';
+import { query, sendInput } from '~service';
 
 type Props = {};
 
@@ -11,14 +11,19 @@ export const SearchBox: FC<Props> = ({}) => {
   return (
     <form
       className="max-w-6xl mx-auto flex justify-between items-center px-5 space-x-3"
-      onSubmit={() => { 
-        search();
+      onSubmit={event => {
+        event.preventDefault();
+        query({});
       }}
     >
       <input
         type="text"
         className="w-full h-14 px-4 placeholder:text-gray-500 outline-none flex-1 bg-transparent dark:text-orange-400 placeholder:italic rounded-sm"
         placeholder="Search by keywords..."
+        onChange={event => {
+          const input = event.target.value;
+          sendInput({ input });
+        }}
       />
       <button
         type="submit"

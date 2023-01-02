@@ -1,10 +1,12 @@
 'use client';
 
 import clsx from 'clsx';
+import { sleep } from 'lib/sleep';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC } from 'react';
-import { CATEGORIES, Category } from '../lib/entities/strings';
+import { FC, useEffect } from 'react';
+import { CATEGORIES, Category } from 'services';
+import { useSelector } from '~service';
 
 type NavLinkProps = {
   category: string;
@@ -31,6 +33,16 @@ const NavLink: FC<NavLinkProps> = ({ category, isActive }) => {
 
 export const NavLinks: FC = () => {
   const path = usePathname();
+
+  const value = useSelector(state => state.value);
+
+  useEffect(() => {
+    sleep(100).then(() => {
+      console.log('env', process.env.MEDIA_STACK_API_URL);
+    });
+
+    console.log(value);
+  }, [value]);
 
   const isActive = (category: Category) => {
     return path?.split('/').pop() === category;
